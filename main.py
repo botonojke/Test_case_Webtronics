@@ -3,13 +3,11 @@ from fastapi import FastAPI
 
 from core.config import WEB_PORT, WEB_HOST
 from db.base import database
+from endpoints import users, auth
 
-app = FastAPI()
-
-
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+app = FastAPI(title="Webtronics FastAPI application")
+app.include_router(users.router, prefix="/users", tags=["users"])
+app.include_router(auth.router, prefix="/auth", tags=["auth"])
 
 
 @app.on_event("startup")
