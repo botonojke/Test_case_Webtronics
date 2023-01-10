@@ -1,0 +1,42 @@
+version: '3.3'
+
+services:
+  web:
+    container_name: fastapi_web_container
+    build: .
+    command: python main.py
+    volumes:
+      - .:/app
+    env_file:
+      - ./.env
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_DATABASE}
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+
+
+  db:
+    image: bitnami/postgresql
+    container_name: postgres_db
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_DATABASE}
+    env_file:
+      - ./.env
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
