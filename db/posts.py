@@ -9,9 +9,16 @@ posts = sqlalchemy.Table(
     sqlalchemy.Column('user_id', sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id'), nullable=False),
     sqlalchemy.Column('title', sqlalchemy.String),
     sqlalchemy.Column('description', sqlalchemy.String),
-    sqlalchemy.Column('likes', sqlalchemy.Integer),
-    sqlalchemy.Column('dislikes', sqlalchemy.Integer),
     sqlalchemy.Column('is_active', sqlalchemy.Boolean, default=True),
     sqlalchemy.Column('create_date', sqlalchemy.DateTime, default=datetime.datetime.utcnow),
     sqlalchemy.Column('update_date', sqlalchemy.DateTime, default=datetime.datetime.utcnow),
+)
+
+post_rating = sqlalchemy.Table(
+    'post_rating',
+    metadata,
+    sqlalchemy.Column('user_id', sqlalchemy.ForeignKey('users.id'), nullable=False),
+    sqlalchemy.Column('post_id', sqlalchemy.ForeignKey('posts.id'), nullable=False),
+    sqlalchemy.Column('likes', sqlalchemy.Boolean, default=None, nullable=True),
+    sqlalchemy.Column('dislikes', sqlalchemy.Boolean, default=None, nullable=True)
 )
