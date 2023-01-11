@@ -3,11 +3,13 @@ from fastapi import FastAPI
 
 from core.config import WEB_PORT, WEB_HOST
 from db.base import database
-from endpoints import users, auth
+from endpoints import users, auth, posts, rate
 
 app = FastAPI(title="Webtronics FastAPI application")
 app.include_router(users.router, prefix="/users", tags=["users"])
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
+app.include_router(posts.router, prefix="/posts", tags=["posts"])
+app.include_router(rate.router, prefix="/rating", tags=["rating"])
 
 
 @app.on_event("startup")
