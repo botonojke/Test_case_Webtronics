@@ -1,5 +1,5 @@
 from repositories.base import BaseRepository
-from models.posts import Posts, Owner, Rate, Rating
+from models.posts import Posts, Owner, Rating
 import datetime
 from typing import List, Optional
 from db.posts import posts, post_rating
@@ -56,42 +56,31 @@ class PostsRepository(BaseRepository):
             return None
         return Posts.parse_obj(post)
 
-    # async def like_post(self, post_id: int, rate: Rate):
-    #     rating = Rate(
-    #         post_id=post_id,
-    #         like=rate.like,
-    #         dislike=rate.dislike
-    #     )
-    #     values = {**rating.dict()}
-    #     query = post_rating.insert().values(**values)
-    #     await self.database.execute(query=query)
-    #     return rating
-
-    async def get_post_rating(self, post_id: int, user_id: int) -> Rating:
-        query = posts.select().where(post_rating.c.post_id == post_id, post_rating.c.user_id == user_id)
+    async def get_post_rating(self, post_id: int, user_id: int):
+        query = post_rating.select().where(post_rating.c.post_id == post_id, post_rating.c.user_id == user_id)
         post = await self.database.fetch_one(query=query)
         if post is None:
             return None
         return Rating.parse_obj(post)
 
-    async def added_like(self, post_id: int, user_id: int) -> Rating:
+    async def added_like(self, post_id: int, user_id: int, like: bool, dislike: bool) -> Rating:
         rating = Rating(
                 post_id=post_id,
                 user_id=user_id,
-                like=True,
-                dislike=False
+                likes=like,
+                dislikes=dislike
             )
         values = {**rating.dict()}
         query = post_rating.insert().values(**values)
         await self.database.execute(query=query)
         return rating
 
-    async def added_dislike(self, post_id: int, user_id: int) -> Rating:
+    async def added_dislike(self, post_id: int, user_id: int, like: bool, dislike: bool) -> Rating:
         rating = Rating(
                 post_id=post_id,
                 user_id=user_id,
-                like=False,
-                dislike=True
+                likes=like,
+                dislikes=dislike
             )
         values = {**rating.dict()}
         query = post_rating.insert().values(**values)

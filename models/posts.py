@@ -26,5 +26,5 @@ class Rate(BaseModel):
 class Rating(BaseModel):
     post_id: int
     user_id: int
-    like: bool
-    dislike: bool
+    likes: bool
+    dislikes: bool
