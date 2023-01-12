@@ -1,0 +1,11 @@
+DB_USERNAME=webtronics_user
+DB_PASSWORD=pass
+DB_DATABASE=webtronics_db
+DB_HOST=localhost
+DB_PORT=5432
+EE_DATABASE_URL="postgresql+asyncpg://webtronics_user:pass@db:5432/webtronics_db"
+
+WEB_HOST=0.0.0.0
+WEB_PORT=8080
+
+KEY = baafdde3fc693d8be0045ae82c6d8fcfc343e909f6c17169811d023e3ba26964
