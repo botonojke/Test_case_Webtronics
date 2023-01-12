@@ -25,19 +25,26 @@ async def rate_post(post_id: int,
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
                             detail="you can't rate your own post")
     # found rating
-    rating = await post.get_post_rating(post_id=post_id, user_id=int(current_user.id))
+    rating = await post.get_post_rating(post_id=post_id,
+                                        user_id=int(current_user.id))
     if rate.dir == 1:  # like post
         # return 409 if rating already exist
         if rating is not None:
             raise HTTPException(status_code=status.HTTP_409_CONFLICT,
                                 detail="rating already exist")
-        await post.added_like(post_id=post_id, user_id=int(current_user.id))
+        await post.added_like(post_id=post_id,
+                              user_id=int(current_user.id),
+                              like=True,
+                              dislike=False)
     elif rate.dir == 2:  # dislike post
         # return 409 if rating already exist
         if rating is not None:
             raise HTTPException(status_code=status.HTTP_409_CONFLICT,
                                 detail="rating already exist")
-        await post.added_dislike(post_id=post_id, user_id=int(current_user.id))
+        await post.added_dislike(post_id=post_id,
+                                 user_id=int(current_user.id),
+                                 like=False,
+                                 dislike=True)
     elif rate.dir == 0:  # remove rating
         # return 404 if rating does not exist
         if rating is None:
